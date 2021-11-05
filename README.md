@@ -85,3 +85,6 @@ angular.module('kityminderDemo', ['kityminderEditor'])
 邮件组：kity@baidu.com
 
 QQ 讨论群：475962105
+
+
+计划支持Office365
