@@ -1,0 +1,58 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.11/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.11",
+    "version": "1.0.0",
+    "id": "CF82F0D5-04FE-46E4-AC14-BCF678D45C65",
+    "packageName": "com.microsoft.teams.extension",
+    "developer": {
+        "name": "Lenovo",
+        "websiteUrl": "https://cowork.lenovo.com/",
+        "privacyUrl": "https://cowork.lenovo.com/privacy",
+        "termsOfUseUrl": "https://cowork.lenovo.com/termsofuse"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "ShareMind",
+        "full": "This field is not used"
+    },
+    "description": {
+        "short": "Short description of TeamsFx.",
+        "full": "Full description of TeamsFx."
+    },
+    "accentColor": "#FFFFFF",
+    "bots": [],
+    "composeExtensions": [],
+    "configurableTabs": [
+        {
+            "configurationUrl": "https://d399-219-143-130-76.ngrok.io/config.html",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team",
+                "groupchat"
+            ],
+            "context": [
+                "channelTab",
+                "privateChatTab"
+            ],
+            "supportedSharePointHosts": [
+                "sharePointFullPage",
+                "sharePointWebPart"
+            ]
+        }
+    ],
+    "staticTabs": [],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "graph.microsoft.com"
+    ],
+    "webApplicationInfo": {
+        "id": "c9b5f67d-5500-4e6e-9529-6c5344abe2e0",
+        "resource": "api://d399-219-143-130-76.ngrok.io/c9b5f67d-5500-4e6e-9529-6c5344abe2e0"
+    }
+}

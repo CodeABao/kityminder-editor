@@ -189,7 +189,8 @@ angular.module('kityminderEditor')
 					'tabs': {
 						'idea': '思路',
 						'appearence': '外观',
-						'view': '视图'
+						'view': '视图',
+						'file':'文件'
 					},
 
 					'quickvisit': {

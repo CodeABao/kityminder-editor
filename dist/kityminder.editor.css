@@ -1525,4 +1525,76 @@ div a.theme-item {
   cursor: -moz-grabbing;
   cursor: grabbing;
 }
+.btn-group-vertical {
+  vertical-align: middle;
+  margin: 5px;
+}
+.btn-group-vertical .save,
+.btn-group-vertical .save-caption {
+  width: 40px;
+  margin: 0;
+  padding: 0;
+  border: none!important;
+  border-radius: 0!important;
+}
+.btn-group-vertical .save:hover,
+.btn-group-vertical .save-caption:hover {
+  background-color: #eff3fa;
+}
+.btn-group-vertical .save:active,
+.btn-group-vertical .save-caption:active {
+  background-color: #c4d0ee;
+}
+.btn-group-vertical .save.active,
+.btn-group-vertical .save-caption.active {
+  box-shadow: none;
+  background-color: #eff3fa;
+}
+.btn-group-vertical .save {
+  height: 25px;
+  background: url(images/icons.png) no-repeat 0 -920px;
+  background-position-x: 50%;
+}
+.btn-group-vertical .save-caption {
+  height: 20px;
+}
+.btn-group-vertical .save-caption .caption {
+  font-size: 12px;
+}
+.btn-group-vertical {
+  vertical-align: middle;
+  margin: 5px;
+}
+.btn-group-vertical .open,
+.btn-group-vertical .open-caption {
+  width: 40px;
+  margin: 0;
+  padding: 0;
+  border: none!important;
+  border-radius: 0!important;
+}
+.btn-group-vertical .open:hover,
+.btn-group-vertical .open-caption:hover {
+  background-color: #eff3fa;
+}
+.btn-group-vertical .open:active,
+.btn-group-vertical .open-caption:active {
+  background-color: #c4d0ee;
+}
+.btn-group-vertical .open.active,
+.btn-group-vertical .open-caption.active {
+  box-shadow: none;
+  background-color: #eff3fa;
+}
+.btn-group-vertical .open {
+  height: 25px;
+  background: url(images/icons.png) no-repeat 0 -421px;
+  background-position-x: 50%;
+}
+.btn-group-vertical .open-caption {
+  height: 20px;
+}
+.btn-group-vertical .open-caption .caption {
+  font-size: 12px;
+}
 /*# sourceMappingURL=kityminder.editor.css.map */

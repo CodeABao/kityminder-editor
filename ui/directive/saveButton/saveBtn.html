@@ -1,0 +1,14 @@
+<div class="btn-group-vertical" dropdown is-open="isopen">
+    <button type="button"
+            class="btn btn-default save"
+            title="{{ 'savetab' | lang:'ui/menu'; }}"
+            ng-class="{'active': isopen}"
+            ng-click="saveJson()"></button>
+    <button type="button"
+            class="btn btn-default save-caption dropdown-toggle"
+            ng-click="saveJson()"
+            title="{{ 'savetab' | lang:'ui/menu'; }}">
+        <span class="caption">{{ 'savetab' | lang:'ui/menu' }}</span>
+        <span class="sr-only">{{ 'savetab' | lang:'ui/menu' }}</span>
+    </button>
+</div>

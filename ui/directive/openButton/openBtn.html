@@ -1,0 +1,14 @@
+<div class="btn-group-vertical" dropdown is-open="isopen">
+    <button type="button"
+            class="btn btn-default open"
+            title="{{ 'opentab' | lang:'ui/menu'; }}"
+            ng-class="{'active': isopen}"
+            ng-click="openJson()"></button>
+    <button type="button"
+            class="btn btn-default open-caption dropdown-toggle"
+            ng-click="openJson()"
+            title="{{ 'opentab' | lang:'ui/menu'; }}">
+        <span class="caption">{{ 'opentab' | lang:'ui/menu' }}</span>
+        <span class="sr-only">{{ 'opentab' | lang:'ui/menu' }}</span>
+    </button>
+</div>

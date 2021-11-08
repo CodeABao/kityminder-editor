@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="node_modules/@microsoft/teams-js/dist/MicrosoftTeams.min.js"></script>
+    <script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
+</head>
+
+<body>
+    <fluent-text-field appearance="outline" placeholder="Share Mind" id="tabName" style="width: 100%;" value="Share Mind">Tab name:</fluent-text-field>
+    <script>
+        microsoftTeams.initialize();
+        microsoftTeams.settings.registerOnSaveHandler((saveEvent) => {
+
+            var tabName=document.getElementById("tabName").value;
+           
+            microsoftTeams.settings.setSettings({
+                websiteUrl: "https://d399-219-143-130-76.ngrok.io",
+                contentUrl: "https://d399-219-143-130-76.ngrok.io/index.html",
+                entityId: "mindtab",
+                suggestedDisplayName: tabName
+            });
+            saveEvent.notifySuccess();
+        });
+        microsoftTeams.settings.setValidityState(true);
+    </script>
+</body>
+
+</html>

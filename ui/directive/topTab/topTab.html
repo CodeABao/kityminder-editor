@@ -1,4 +1,8 @@
 <tabset>
+    <tab heading="{{ 'file' | lang: 'ui/tabs'; }}" ng-click="toggleTopTab('file')" select="setCurTab('file')">
+        <open-btn minder="minder"></open-btn>
+        <save-btn minder="minder"></save-btn>
+    </tab>
     <tab heading="{{ 'idea' | lang: 'ui/tabs'; }}" ng-click="toggleTopTab('idea')" select="setCurTab('idea')">
         <undo-redo editor="editor"></undo-redo>
         <append-node minder="minder"></append-node>
@@ -11,7 +15,8 @@
         <progress-editor minder="minder"></progress-editor>
         <resource-editor minder="minder"></resource-editor>
     </tab>
-    <tab heading="{{ 'appearence' | lang: 'ui/tabs'; }}" ng-click="toggleTopTab('appearance')" select="setCurTab('appearance')">
+    <tab heading="{{ 'appearence' | lang: 'ui/tabs'; }}" ng-click="toggleTopTab('appearance')"
+        select="setCurTab('appearance')">
         <template-list minder="minder" class="inline-directive"></template-list>
         <theme-list minder="minder"></theme-list>
         <layout minder="minder" class="inline-directive"></layout>
