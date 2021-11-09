@@ -27,7 +27,7 @@
     "composeExtensions": [],
     "configurableTabs": [
         {
-            "configurationUrl": "https://7744-219-143-130-76.ngrok.io/config.html",
+            "configurationUrl": "https://f019-219-143-130-76.ngrok.io/config.html",
             "canUpdateConfiguration": true,
             "scopes": [
                 "team",
@@ -52,7 +52,7 @@
         "graph.microsoft.com"
     ],
     "webApplicationInfo": {
-        "id": "c9b5f67d-5500-4e6e-9529-6c5344abe2e0",
-        "resource": "api://d399-219-143-130-76.ngrok.io/c9b5f67d-5500-4e6e-9529-6c5344abe2e0"
+        "id": "00000003-0000-0ff1-ce00-000000000000",
+        "resource": "https://lenovobeijing.sharepoint.com"
     }
 }

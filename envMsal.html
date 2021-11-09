@@ -1,0 +1,83 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.14.2/js/msal-browser.min.js">
+    </script>
+</head>
+
+<div>
+    <button id="loginButton">Login</button>
+    <button id="logoutButton" style="visibility: hidden;">Logout</button>
+    <button id="tokenButton" style="visibility: hidden;">Get Token</button>
+</div>
+
+<body>
+    <script>
+        const loginButton = document.getElementById("loginButton");
+        const logoutButton = document.getElementById("logoutButton");
+        const tokenButton = document.getElementById("tokenButton");
+
+        const pca = new msal.PublicClientApplication({
+            auth: {
+                clientId: "c9b5f67d-5500-4e6e-9529-6c5344abe2e0",
+                authority: "https://login.microsoftonline.com/5c7d0b28-bdf8-410c-aa93-4df372b16203",
+                redirectUri: "http://localhost:3000/envMsal.html",
+            },
+            cache: {
+                cacheLocation: "sessionStorage"
+            },
+            system: {
+                loggerOptions: {
+                    loggerCallback(loglevel, message, containsPii) {
+                        console.log(message);
+                    },
+                    piiLoggingEnabled: false,
+                    logLevel: msal.LogLevel.Verbose,
+                }
+            }
+        });
+
+        loginButton.addEventListener('click', () => {
+            pca.loginPopup().then((response) => {
+                console.log(`Hello ${response.account.username}!`);
+
+                loginButton.style.visibility = "hidden";
+                logoutButton.style.visibility = "visible";
+                tokenButton.style.visibility = "visible";
+            })
+        });
+
+        logoutButton.addEventListener('click', () => {
+            pca.logoutPopup().then((response) => {
+                window.location.reload();
+            })
+        });
+
+        tokenButton.addEventListener('click', () => {
+            pca.acquireTokenPopup({
+                scopes: ["https://lenovobeijing.sharepoint.com/.default"]
+            }).then((response) => {
+                console.log(response);
+                debugger;
+                var listUri = "https://lenovobeijing.sharepoint.com/sites/ShowPortal/_api/web";
+                $.ajax({
+                    type: "GET",
+                    url: listUri,
+                    headers: {
+                        "Authorization": "Bearer " + response.accessToken,
+                        "accept": "application/json;odata=verbose"
+                    }
+                }).done(function (response) {
+                    console.log("Successfully fetched list from SharePoint.");
+                    debugger;
+                }).fail(function () {
+                    console.log("Fetching list from SharePoint failed.");
+                });
+            })
+        });
+    </script>
+</body>
+
+</html>

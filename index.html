@@ -108,72 +108,11 @@
 
                 microsoftTeams.initialize();
                 microsoftTeams.getContext(function (context) {
-                    microsoftTeams.authentication.authenticate({
-                        url: window.location.origin + "/auth-start.html",
-                        width: 600,
-                        height: 535,
-                        successCallback: function (result) {
-                            debugger;
-                            var token = JSON.parse(localStorage.getItem(result));
-                            var groupId = context.groupId;
-                            var baseUrl = "https://graph.microsoft.com/v1.0";
-                            var siteReqUrl = baseUrl + "/groups/" + groupId + "/sites/root";
-
-                            let siteRequest = new Request(siteReqUrl, {
-                                method: 'get',
-                                headers: {
-                                    'Content-Type': 'application/json;charset=utf-8;',
-                                    'Authorization': token.accessToken
-                                }
-                            })
-                            fetch(siteRequest).then(response => {
-                                let result = response.text()
-                                result.then(res => {
-                                    var siteId = JSON.parse(res).id;
-
-                                    var listTitle = "ShareMind4";
-                                    var option = {
-                                        displayName: listTitle,
-                                        list: {
-                                            template: "documentLibrary"
-                                        }
-                                    }
-                                    var listGetUrl = baseUrl + "/sites/" + siteId + "/lists/" + listTitle;
-                                    fetch(new Request(listGetUrl, {
-                                        method: 'get',
-                                        headers: {
-                                            'Content-Type': 'application/json;charset=utf-8;',
-                                            'Authorization': token.accessToken
-                                        }
-                                    })).then(listRes => {
-                                        debugger;
-                                        if (listRes.status == 404) {
-                                            var listPostUrl = baseUrl + "/sites/" + siteId + "/lists";
-                                            fetch(new Request(listPostUrl, {
-                                                method: 'post',
-                                                headers: {
-                                                    'Content-Type': 'application/json;charset=utf-8;',
-                                                    'Authorization': token.accessToken
-                                                },
-                                                data: JSON.stringify(option)
-                                            })).then(postListRes => {
-                                                debugger;
-
-                                            })
-
-                                        }
-                                    })
-
-
-                                })
-                            })
-
-                        },
-                        failureCallback: function (reason) {
-                            console.log("Login failed: " + reason);
-                            debugger;
-                        }
-                    });
+                    var authTokenRequest = {
+                        successCallback: function (result) { console.log("Success: " + result); },
+                        failureCallback: function (error) { console.log("Failure: " + error); }
+                    };
+                    microsoftTeams.authentication.getAuthToken(authTokenRequest);
                 })
             };
         });
