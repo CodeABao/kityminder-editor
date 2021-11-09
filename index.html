@@ -129,9 +129,9 @@
                             fetch(siteRequest).then(response => {
                                 let result = response.text()
                                 result.then(res => {
-                                    var siteId = JSON.parse(res).id.split(",")[1];
+                                    var siteId = JSON.parse(res).id;
 
-                                    var listTitle = "ShareMind3";
+                                    var listTitle = "ShareMind4";
                                     var option = {
                                         displayName: listTitle,
                                         list: {
