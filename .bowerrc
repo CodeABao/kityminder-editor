@@ -1,5 +1,7 @@
 {
     "directory": "bower_components",
     "allow_root": true,
-    "registry": "https://registry.bower.io"
+    "registry": "https://registry.bower.io",
+    "proxy": "http://127.0.0.1:60508",
+    "https-proxy": "http://127.0.0.1:60508"
 }

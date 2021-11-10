@@ -7,21 +7,22 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
     <script src="node_modules/@microsoft/teams-js/dist/MicrosoftTeams.min.js"></script>
-    <script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
+    <script type="module" src="node_modules/@fluentui/web-components/dist/web-components.min.js"></script>
 </head>
 
 <body>
     <fluent-text-field appearance="outline" placeholder="Share Mind" id="tabName" style="width: 100%;"
         value="Share Mind">Tab name:</fluent-text-field>
+    <fluent-text-field appearance="outline" placeholder="file Url" id="fileUrl" style="width: 100%;">FileUrl:
+    </fluent-text-field>
     <script>
         microsoftTeams.initialize();
         microsoftTeams.settings.registerOnSaveHandler((saveEvent) => {
-
             var tabName = document.getElementById("tabName").value;
-
+            var fileUrl = document.getElementById("fileUrl").value;
             microsoftTeams.settings.setSettings({
-                websiteUrl: "https://f019-219-143-130-76.ngrok.io",
-                contentUrl: "https://f019-219-143-130-76.ngrok.io/index.html",
+                websiteUrl: "https://7634-104-232-234-8.ngrok.io",
+                contentUrl: "https://7634-104-232-234-8.ngrok.io/index.html?fileUrl="+fileUrl,
                 entityId: "mindtab",
                 suggestedDisplayName: tabName
             });

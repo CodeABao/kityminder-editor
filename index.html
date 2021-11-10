@@ -55,6 +55,7 @@
 <script src="bower_components/seajs/dist/sea.js"></script>
 <!-- endbower -->
 
+<script type="text/javascript" src="https://alcdn.msauth.net/browser/2.14.2/js/msal-browser.min.js"></script>
 <script src="node_modules/@microsoft/teams-js/dist/MicrosoftTeams.min.js"></script>
 
 <script src="ui/kityminder.app.js"></script>
@@ -100,6 +101,28 @@
 <script src="ui/directive/openButton/openBtn.directive.js"></script>
 
 <script>
+
+    const pca = new msal.PublicClientApplication({
+        auth: {
+            clientId: "c9b5f67d-5500-4e6e-9529-6c5344abe2e0",
+            authority: "https://login.microsoftonline.com/5c7d0b28-bdf8-410c-aa93-4df372b16203",
+            redirectUri: "https://7634-104-232-234-8.ngrok.io/index.html",
+        },
+        cache: {
+            cacheLocation: "localStorage"
+        },
+        system: {
+            loggerOptions: {
+                loggerCallback(loglevel, message, containsPii) {
+                    console.log(message);
+                },
+                piiLoggingEnabled: false,
+                logLevel: msal.LogLevel.Verbose,
+            }
+        }
+    });
+
+
     angular.module('kityminderDemo', ['kityminderEditor'])
         .controller('MainController', function ($scope) {
             $scope.initEditor = function (editor, minder) {
@@ -108,15 +131,69 @@
 
                 microsoftTeams.initialize();
                 microsoftTeams.getContext(function (context) {
-                    var authTokenRequest = {
-                        successCallback: function (result) { console.log("Success: " + result); },
-                        failureCallback: function (error) { console.log("Failure: " + error); }
-                    };
-                    microsoftTeams.authentication.getAuthToken(authTokenRequest);
-                })
+                    var fileUrl = getUrlParam("fileUrl");
+                    var urls = fileUrl.split("/");
+                    var hostUrl = "https://" + urls[2];
+                    var fileRelativeUrl = fileUrl.replace(hostUrl, "");
+                    var siteUrl;
+                    if (fileUrl.indexOf(":t:") > -1) {
+                        siteUrl = hostUrl + "/" + urls[5] + "/" + urls[6];
+                        fileRelativeUrl = fileRelativeUrl.replace("/:t:/r", "");
+                    } else {
+                        siteUrl = hostUrl + "/" + urls[3] + "/" + urls[4];
+                    }
+                    var reqUrl = siteUrl + "/_api/web/GetFileByServerRelativeUrl('" + fileRelativeUrl + "')/$value";
+
+                    microsoftTeams.authentication.authenticate({
+                        url: window.location.origin + "/auth-start.html?host=" + hostUrl,
+                        width: 600,
+                        height: 535,
+                        successCallback: function (result) {
+
+                            //var fileUrl = "https://lenovobeijing-my.sharepoint.com/:t:/r/personal/libx6_lenovo_com/Documents/Sync/Work/20170116.txt";
+                            var auth = localStorage.getItem(result);
+                            var accessToken = JSON.parse(auth).accessToken;
+                            getFile(reqUrl, accessToken);
+                        },
+                        failureCallback: function (reason) {
+                            handleAuthError(reason);
+                        }
+                    });
+                });
             };
         });
 
+    function getUrlParam(name) {
+        var value = "", isFound = !1;
+        if (window.location.search.indexOf("?") == 0 && window.location.search.indexOf("=") > 1) {
+            var arrSource = unescape(window.location.search).substring(1, window.location.search.length).split("&"), i = 0;
+            while (i < arrSource.length && !isFound) {
+                var eqIndex = arrSource[i].indexOf("=");
+                eqIndex > 0 && arrSource[i].split("=")[0].toLowerCase() == name.toLowerCase() && (value = arrSource[i].substr((eqIndex + 1)), isFound = !0);
+                i++;
+            }
+        }
+        return value == "" && (value = null), value;
+    }
+
+    function getFile(reqUrl, accessToken) {
+
+
+        $.ajax({
+            type: "GET",
+            url: reqUrl,
+            headers: {
+                "Authorization": "Bearer " + accessToken,
+                "accept": "application/json;odata=verbose"
+            }
+        }).done(function (res) {
+
+
+            debugger;
+        }).fail(function () {
+            console.log("Fetching list from SharePoint failed.");
+        });
+    }
 </script>
 
 </html>

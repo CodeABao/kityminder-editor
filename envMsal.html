@@ -7,18 +7,17 @@
     </script>
 </head>
 
-<div>
-    <button id="loginButton">Login</button>
-    <button id="logoutButton" style="visibility: hidden;">Logout</button>
-    <button id="tokenButton" style="visibility: hidden;">Get Token</button>
-</div>
-
 <body>
     <script>
-        const loginButton = document.getElementById("loginButton");
-        const logoutButton = document.getElementById("logoutButton");
-        const tokenButton = document.getElementById("tokenButton");
-
+        function toQueryString(queryParams) {
+            let encodedQueryParams = [];
+            for (let key in queryParams) {
+                encodedQueryParams.push(
+                    key + "=" + encodeURIComponent(queryParams[key])
+                );
+            }
+            return encodedQueryParams.join("&");
+        }
         const pca = new msal.PublicClientApplication({
             auth: {
                 clientId: "c9b5f67d-5500-4e6e-9529-6c5344abe2e0",
@@ -26,7 +25,7 @@
                 redirectUri: "http://localhost:3000/envMsal.html",
             },
             cache: {
-                cacheLocation: "sessionStorage"
+                cacheLocation: "localStorage"
             },
             system: {
                 loggerOptions: {
@@ -39,44 +38,71 @@
             }
         });
 
-        loginButton.addEventListener('click', () => {
-            pca.loginPopup().then((response) => {
-                console.log(`Hello ${response.account.username}!`);
+        var accounts = pca.getAllAccounts();
 
-                loginButton.style.visibility = "hidden";
-                logoutButton.style.visibility = "visible";
-                tokenButton.style.visibility = "visible";
-            })
-        });
+        //var fileUrl = toQueryString("fileUrl");
+        var fileUrl = "https://lenovobeijing-my.sharepoint.com/:t:/r/personal/libx6_lenovo_com/Documents/Sync/Work/20170116.txt";
+        getFile(fileUrl);
+        debugger;
+        function getToken(hostUrl, callback) {
+            accounts = pca.getAllAccounts();
 
-        logoutButton.addEventListener('click', () => {
-            pca.logoutPopup().then((response) => {
-                window.location.reload();
-            })
-        });
+            var scope = hostUrl + "/.default";
 
-        tokenButton.addEventListener('click', () => {
-            pca.acquireTokenPopup({
-                scopes: ["https://lenovobeijing.sharepoint.com/.default"]
+            pca.acquireTokenSilent({
+                scopes: [scope],
+                account: accounts[0]
             }).then((response) => {
-                console.log(response);
-                debugger;
-                var listUri = "https://lenovobeijing.sharepoint.com/sites/ShowPortal/_api/web";
+                callback(response);
+            })
+        }
+
+        function getFile(fileUrl) {
+            var urls = fileUrl.split("/");
+            var hostUrl = "https://" + urls[2];
+            var fileRelativeUrl = fileUrl.replace(hostUrl, "");
+            var siteUrl;
+            if (fileUrl.indexOf(":t:") > -1) {
+                siteUrl = hostUrl + "/" + urls[5] + "/" + urls[6];
+                fileRelativeUrl = fileRelativeUrl.replace("/:t:/r", "");
+            } else {
+                siteUrl = hostUrl + "/" + urls[3] + "/" + urls[4];
+            }
+
+            login(hostUrl, function (response) {
+                var reqUrl = siteUrl + "/_api/web/GetFileByServerRelativeUrl('" + fileRelativeUrl + "')/$value";
+
                 $.ajax({
                     type: "GET",
-                    url: listUri,
+                    url: reqUrl,
                     headers: {
                         "Authorization": "Bearer " + response.accessToken,
                         "accept": "application/json;odata=verbose"
                     }
-                }).done(function (response) {
-                    console.log("Successfully fetched list from SharePoint.");
+                }).done(function (res) {
+
+
+
+
                     debugger;
                 }).fail(function () {
                     console.log("Fetching list from SharePoint failed.");
                 });
-            })
-        });
+
+            });
+        }
+
+        function login(hostUrl, callback) {
+            if (accounts.length == 0) {
+                pca.loginPopup().then((response) => {
+                    console.log(`Hello ${response.account.username}!`);
+                    getToken(hostUrl, callback);
+                });
+            } else {
+                getToken(hostUrl, callback);
+            }
+        }
+
     </script>
 </body>
 

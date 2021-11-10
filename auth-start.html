@@ -22,7 +22,7 @@
                 client_id: "c9b5f67d-5500-4e6e-9529-6c5344abe2e0",
                 response_type: "token",
                 response_mode: "fragment",
-                scope: "https://lenovobeijing.sharepoint.com/.default",
+                scope: getUrlParam("host")+"/.default",
                 redirect_uri: window.location.origin + "/auth-end.html",
                 nonce: _guid(),
                 state: state,
@@ -34,6 +34,20 @@
             let authorizeEndpoint = `https://login.microsoftonline.com/${context.tid}/oauth2/v2.0/authorize?${toQueryString(queryParams)}`;
             window.location.assign(authorizeEndpoint);
         });
+
+        function getUrlParam(name) {
+            var value = "", isFound = !1;
+            if (window.location.search.indexOf("?") == 0 && window.location.search.indexOf("=") > 1) {
+                var arrSource = unescape(window.location.search).substring(1, window.location.search.length).split("&"), i = 0;
+                while (i < arrSource.length && !isFound) {
+                    var eqIndex = arrSource[i].indexOf("=");
+                    eqIndex > 0 && arrSource[i].split("=")[0].toLowerCase() == name.toLowerCase() && (value = arrSource[i].substr((eqIndex + 1)), isFound = !0);
+                    i++;
+                }
+            }
+            return value == "" && (value = null), value;
+        }
+
 
         // Build query string from map of query parameter
         function toQueryString(queryParams) {
