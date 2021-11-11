@@ -137,9 +137,11 @@
                 var hostUrl = "https://" + urls[2];
                 var fileRelativeUrl = fileUrl.replace(hostUrl, "");
                 var siteUrl;
-                if (fileUrl.indexOf(":t:") > -1) {
+
+                var reg=/\/:\S:\/\S/;
+                if (reg.test(fileUrl)) {
                     siteUrl = hostUrl + "/" + urls[5] + "/" + urls[6];
-                    fileRelativeUrl = fileRelativeUrl.replace("/:t:/r", "");
+                    fileRelativeUrl = fileRelativeUrl.replace(reg, "");
                 } else {
                     siteUrl = hostUrl + "/" + urls[3] + "/" + urls[4];
                 }
@@ -149,28 +151,28 @@
                 if (auth) {
                     var authobj = JSON.parse(auth);
                     if (new Date(authobj.expiresOn).getTime() > new Date().getTime()) {
-                        getFile(reqUrl, authobj.accessToken);
+                        return getFile(reqUrl, authobj.accessToken);
                     }
-                } else {
-                    microsoftTeams.initialize();
-                    microsoftTeams.getContext(function (context) {
-                        microsoftTeams.authentication.authenticate({
-                            url: window.location.origin + "/silent-start.html?host=" + hostUrl,
-                            width: 600,
-                            height: 535,
-                            successCallback: function (result) {
-                                localStorage.setItem("auth", JSON.stringify(result))
-                                //var fileUrl = "https://lenovobeijing-my.sharepoint.com/:t:/r/personal/libx6_lenovo_com/Documents/Sync/Work/20170116.txt";
-                                var auth = localStorage.getItem(result);
-                                var accessToken = result.accessToken;
-                                getFile(reqUrl, accessToken);
-                            },
-                            failureCallback: function (reason) {
-                                handleAuthError(reason);
-                            }
-                        });
-                    });
                 }
+
+                microsoftTeams.initialize();
+                microsoftTeams.getContext(function (context) {
+                    microsoftTeams.authentication.authenticate({
+                        url: window.location.origin + "/silent-start.html?host=" + hostUrl,
+                        width: 600,
+                        height: 535,
+                        successCallback: function (result) {
+                            localStorage.setItem("auth", JSON.stringify(result))
+                            //var fileUrl = "https://lenovobeijing-my.sharepoint.com/:t:/r/personal/libx6_lenovo_com/Documents/Sync/Work/20170116.txt";
+                            var auth = localStorage.getItem(result);
+                            var accessToken = result.accessToken;
+                            getFile(reqUrl, accessToken);
+                        },
+                        failureCallback: function (reason) {
+                            handleAuthError(reason);
+                        }
+                    });
+                });
             };
         });
 
@@ -198,7 +200,7 @@
                 "accept": "application/json;odata=verbose"
             }
         }).done(function (res) {
-
+            minder.importJson(JSON.parse(res));
 
             debugger;
         }).fail(function () {
