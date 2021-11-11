@@ -6,42 +6,74 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Cache-control" content="no-cache">
   <meta http-equiv="Cache" content="no-cache">
-<script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-    <script src="https://secure.aadcdn.microsoftonline-p.com/lib/1.0.15/js/adal.min.js"
-        integrity="sha384-lIk8T3uMxKqXQVVfFbiw0K/Nq+kt1P3NtGt/pNexiDby2rKU6xnDY8p16gIwKqgI"
-        crossorigin="anonymous"></script>
+  <script src="node_modules/@microsoft/teams-js/dist/MicrosoftTeams.min.js"></script>
+  <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.14.2/js/msal-browser.min.js"></script>
 </head>
 
 <body>
-<script>
-var variables = {
-  // Domain of Azure AD tenant
-  azureAD: "5c7d0b28-bdf8-410c-aa93-4df372b16203",
-  // ClientId of Azure AD application principal
-  clientId: "c9b5f67d-5500-4e6e-9529-6c5344abe2e0",
-  
-  // Name of SharePoint tenant
-  sharePointTenant: "lenovobeijing"
-}
+  <script>
+    const pca = new msal.PublicClientApplication({
+      auth: {
+        clientId: "c9b5f67d-5500-4e6e-9529-6c5344abe2e0",
+        authority: "https://login.microsoftonline.com/5c7d0b28-bdf8-410c-aa93-4df372b16203",
+        redirectUri: "https://7660-104-232-234-8.ngrok.io/silent-start.html",
+      },
+      cache: {
+        cacheLocation: "localStorage"
+      },
+      system: {
+        loggerOptions: {
+          loggerCallback(loglevel, message, containsPii) {
+            console.log(message);
+          },
+          piiLoggingEnabled: false,
+          logLevel: msal.LogLevel.Verbose,
+        }
+      }
+    });
 
-// Create config and get AuthenticationContext
-window.config = {
-  tenant: variables.azureAD,
-  clientId: variables.clientId,
-  postLogoutRedirectUri: window.location.origin,
-  redirectUri: window.location.origin+"/silent-end.html",
-  endpoints: {
-    graphApiUri: "https://graph.microsoft.com",
-    sharePointUri: "https://" + variables.sharePointTenant + ".sharepoint.com",
-  },
-  cacheLocation: "localStorage"
-};
-var authContext = new AuthenticationContext(config);
-var user = authContext.getCachedUser();
-if (!user) {
-  debugger;
-  authContext.login();
-}
-</script>
+    microsoftTeams.initialize();
+    microsoftTeams.getContext(function (context) {
+
+      pca.handleRedirectPromise().then(function (res) {
+        if (res != null) {
+          microsoftTeams.authentication.notifySuccess(response);
+        }
+      });
+
+      debugger;
+      var hostUrl = getUrlParam("host");
+      var scope = hostUrl + "/.default";
+      const accounts = pca.getAllAccounts();
+      var account = accounts[0];
+      if (account) {
+        pca.acquireTokenSilent({
+          scopes: [scope],
+          account: account
+        }).then((response) => {
+          microsoftTeams.authentication.notifySuccess(response);
+        })
+      } else {
+        pca.acquireTokenRedirect({
+          scopes: [scope]
+        })
+      }
+    });
+
+    function getUrlParam(name) {
+      var value = "", isFound = !1;
+      if (window.location.search.indexOf("?") == 0 && window.location.search.indexOf("=") > 1) {
+        var arrSource = unescape(window.location.search).substring(1, window.location.search.length).split("&"), i = 0;
+        while (i < arrSource.length && !isFound) {
+          var eqIndex = arrSource[i].indexOf("=");
+          eqIndex > 0 && arrSource[i].split("=")[0].toLowerCase() == name.toLowerCase() && (value = arrSource[i].substr((eqIndex + 1)), isFound = !0);
+          i++;
+        }
+      }
+      return value == "" && (value = null), value;
+    }
+  </script>
 </body>
+
 </html>
